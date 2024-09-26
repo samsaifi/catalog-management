@@ -1,0 +1,41 @@
+services:
+  web:
+    build:
+      context: . # Use the current directory where the Dockerfile is located
+      dockerfile: Dockerfile # The Dockerfile name
+    container_name: php-web
+    dns:
+      - 8.8.8.8
+    volumes:
+      - ./www:/var/www/html
+    ports:
+      - "8080:80" # PHP web app on port 8080
+    networks:
+      - catalog-network
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: catalog_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - ./db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - catalog-network
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8081:80" # phpMyAdmin on port 8081
+    networks:
+      - catalog-network
+networks:
+  catalog-network:
+    driver: bridge

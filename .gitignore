@@ -1,0 +1,4 @@
+# CakePHP 3
+/vendor/*
+/vendors/*
+/db_data/*
